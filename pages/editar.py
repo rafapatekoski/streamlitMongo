@@ -3,6 +3,14 @@ from pymongo import MongoClient
 from dotenv import load_dotenv, find_dotenv
 import os
 import streamlit as st
+from streamlit_extras.switch_page_button import switch_page
+from time import sleep
+
+if "editar" not in st.session_state:
+    print("...")
+else:
+    del st.session_state["editar"]
+    switch_page("app")
 
 load_dotenv(find_dotenv())
 password = os.environ.get("MONGODB_PWD")
@@ -38,9 +46,11 @@ def editar():
     
     # Delete all documents in the collection
     pandasteste.delete_many({})
-
+    sleep(1)
     # Insert the edited documents without '_id' back into the collection
     pandasteste.insert_many(dados_json)
+    sleep(1)
+    st.session_state["editar"] = True
 
 # Botão para chamar a função de edição
 st.button("Editar", on_click=editar)
