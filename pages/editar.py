@@ -20,23 +20,13 @@ dbs = client.list_database_names()
 teste_db = client.escola
 collections = teste_db.list_collection_names()
 aluno = collections[0]
-st.write(collections)
-st.write(aluno)
-nome = st.text_input("Digite seu nome: ")
-profissao = st.text_input("Digite sua profissão")
-nascimento = st.date_input("Data de Nascimento", format="DD/MM/YYYY")
-nascimento = str(nascimento)
-def insert_test_doc():
-    if nome is None or profissao is None or nascimento is None:
-        st.error("Preencha os campos corretamente.")
-    else:
-        collection = teste_db.pandasteste
-        st.write(collection)
-        test_document = {
-            "nome": nome,
-            "nascimento":nascimento,
-            "profissao":profissao
-        }
-        inserted_id = collection.insert_one(test_document).inserted_id
-        st.write(inserted_id)
-st.button("Inserir",on_click=insert_test_doc)
+df = pd.read_csv("listapiloto2024.csv", sep=';')
+df_editado = st.data_editor(df, num_rows="dynamic")
+
+def editar():
+    collection = teste_db.pandasteste
+    st.write(collection)
+    dados_json = df_editado.to_dict(orient='records')
+    collection.delete_many({})
+    collection.insert_many(dados_json)
+st.button("Editar", on_click=editar)
