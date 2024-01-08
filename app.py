@@ -14,3 +14,22 @@ try:
     st.write("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     st.write(e)
+
+dbs = client.list_database_names()
+teste_db = client.escola
+collections = teste_db.list_collection_names()
+aluno = collections[0]
+st.write(collections)
+st.write(aluno)
+
+def insert_test_doc():
+    collection = teste_db.teste
+    st.write(collection)
+    test_document = {
+        "nome":"Rafal Patekoski",
+        "idade":23,
+        "profissao":"Cientista de Dados"
+    }
+    inserted_id = collection.insert_one(test_document).inserted_id
+    st.write(inserted_id)
+st.button("Inserir",on_click=insert_test_doc)
